@@ -1,9 +1,44 @@
 const express = require("express");
-const { index, login, signup } = require("../controllers/index");
+const { body } = require("express-validator");
+const { prisma } = require("../lib/prisma");
+const {
+  index,
+  loginPage,
+  loginPost,
+  signupPage,
+  signupPost,
+  logout,
+} = require("../controllers/index");
+const { log } = require("console");
+const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
 
-router.get("/", index);
-router.get("/login", login);
-router.get("/signup", signup);
+router.get("/", ensureAuthenticated, index);
+router.get("/login", loginPage);
+router.post("/login", loginPost);
+router.get("/signup", signupPage);
+router.post(
+  "/signup",
+  [
+    body("username")
+      .notEmpty()
+      .withMessage("Username is required")
+      .custom(async (value) => {
+        const existingUser = await prisma.user.findUnique({
+          where: { username: value },
+        });
+        if (existingUser) {
+          throw new Error("Username already exists");
+        }
+        return true;
+      }),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long"),
+  ],
+  signupPost
+);
+
+router.get("/logout", logout);
 
 module.exports = router;
