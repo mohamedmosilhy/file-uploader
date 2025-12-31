@@ -1,19 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %> - File Uploader</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>File Uploader</span>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+                <a href="/logout" class="nav-link logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>
-            <%= pageTitle %>
-        </title>
-    </head>
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <h1><i class="fas fa-rocket"></i> Welcome to Your Dashboard!</h1>
+            <p>Manage your files and folders efficiently</p>
+        </div>
 
-    <body>
-        <h1>
-            Hello World!
-        </h1>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>0</h3>
+                    <p>Total Files</p>
+                </div>
+            </div>
 
-    </body>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>0</h3>
+                    <p>Folders</p>
+                </div>
+            </div>
 
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>0 MB</h3>
+                    <p>Storage Used</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Today</h3>
+                    <p>Last Upload</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h2>Upload Files</h2>
+                <p>Drag and drop or click to upload your files</p>
+                <button class="btn btn-primary" disabled>
+                    <i class="fas fa-upload"></i>
+                    Coming Soon
+                </button>
+            </div>
+
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-folder-plus"></i>
+                </div>
+                <h2>Create Folder</h2>
+                <p>Organize your files into folders</p>
+                <button class="btn btn-secondary" disabled>
+                    <i class="fas fa-plus"></i>
+                    Coming Soon
+                </button>
+            </div>
+        </div>
+
+        <div class="info-banner">
+            <i class="fas fa-info-circle"></i>
+            <div>
+                <strong>Getting Started:</strong>
+                <p>File upload and folder management features are coming soon. Stay tuned!</p>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
