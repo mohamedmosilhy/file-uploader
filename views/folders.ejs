@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    function toggleForm(formId) {
+      const form = document.getElementById(formId);
+      if (form.style.display === 'none') {
+        form.style.display = 'block';
+      } else {
+        form.style.display = 'none';
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <%
+  function renderFolder(folder, level = 0) {
+    const totalItems = (folder.childFolders?.length || 0) + (folder.files?.length || 0);
+  %>
+  <li class="folder-item <%= level > 0 ? 'nested' : '' %>">
+    <div class="item-header">
+      <i class="fas fa-folder"></i>
+      <span class="item-name"><%= folder.name %></span>
+      <span class="item-count">(<%= totalItems %> items)</span>
+      <button class="btn-add-subfolder" onclick="toggleForm('form-<%= folder.id %>')">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <div id="form-<%= folder.id %>" class="subfolder-form" style="display: none;">
+      <form action="/folders" method="POST" class="inline-folder-form">
+        <input type="text" name="folderName" placeholder="Subfolder name" required>
+        <input type="hidden" name="parentId" value="<%= folder.id %>">
+        <button type="submit" class="btn-create-inline">
+          <i class="fas fa-check"></i>
+        </button>
+        <button type="button" class="btn-cancel-inline" onclick="toggleForm('form-<%= folder.id %>')">
+          <i class="fas fa-times"></i>
+        </button>
+      </form>
+    </div>
+
+    <% if (folder.childFolders?.length > 0 || folder.files?.length > 0) { %>
+    <ul class="nested-list">
+      <% if (folder.childFolders?.length > 0) { %>
+      <% folder.childFolders.forEach(child => { %>
+      <%- renderFolder(child, level + 1) %>
+      <% }); %>
+      <% } %>
+      <% if (folder.files?.length > 0) { %>
+      <% folder.files.forEach(file => { %>
+      <li class="file-item">
+        <div class="item-header">
+          <i class="fas fa-file-alt"></i>
+          <span class="item-name"><%= file.name %></span>
+          <span class="file-size"><%= (file.size / 1024).toFixed(2) %> KB</span>
+          <span class="file-date"><%= file.uploadedAt.toLocaleDateString() %></span>
+        </div>
+      </li>
+      <% }); %>
+      <% } %>
+    </ul>
+    <% } %>
+  </li>
+  <% } %>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>File Uploader</span>
+      </div>
+      <div class="nav-menu">
+        <span class="user-badge">
+          <i class="fas fa-user-circle"></i> <%= user.username %>
+        </span>
+        <a href="/" class="nav-link">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+        <a href="/folders" class="nav-link active">
+          <i class="fas fa-folder"></i>
+          Folders
+        </a>
+        <a href="/logout" class="nav-link logout">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1><i class="fas fa-folder-tree"></i> My Folders</h1>
+      <div class="create-root-folder">
+        <form action="/folders" method="POST" class="folder-form">
+          <input type="text" name="folderName" placeholder="New folder name" required>
+          <button type="submit" class="btn-create">
+            <i class="fas fa-plus"></i> Create Folder
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <% if (rootFolders.length === 0) { %>
+    <div class="empty-message">
+      <i class="fas fa-folder-open"></i>
+      <p>No folders yet. Create your first folder!</p>
+    </div>
+    <% } else { %>
+    <ul class="folder-tree">
+      <% rootFolders.forEach(folder => { %>
+      <%- renderFolder(folder, 0) %>
+      <% }); %>
+    </ul>
+    <% } %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 File Uploader. All rights reserved.</p>
+  </footer>
+</body>
+
+</html>

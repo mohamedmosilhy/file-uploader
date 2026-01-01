@@ -8,8 +8,9 @@ const {
   signupPage,
   signupPost,
   logout,
+  getFolders,
+  postFolders,
 } = require("../controllers/index");
-const { log } = require("console");
 const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
 
@@ -40,5 +41,7 @@ router.post(
 );
 
 router.get("/logout", logout);
+router.get("/folders", getFolders);
+router.post("/folders", postFolders);
 
 module.exports = router;

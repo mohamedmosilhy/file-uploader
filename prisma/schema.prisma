@@ -30,7 +30,7 @@ model File {
   uploadedAt DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  folder     Folder?  @relation(fields: [folderId], references: [id])
+  folder     Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId   Int?
 }
 
@@ -41,7 +41,7 @@ model Folder {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
   files          File[]
-  parentFolder   Folder?  @relation("FolderToFolder", fields: [parentFolderId], references: [id])
+  parentFolder   Folder?  @relation("FolderToFolder", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId Int?
   childFolders   Folder[] @relation("FolderToFolder")
 }
