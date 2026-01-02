@@ -93,4 +93,32 @@ module.exports = {
       return next(error);
     }
   },
+  getFilesForm: async (req, res, next) => {
+    try {
+      const folderId = parseInt(req.params.id);
+      res.render("filesForm", { pageTitle: "Files Form", folderId });
+    } catch (error) {
+      return next(error);
+    }
+  },
+  postFiles: async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return res.status(400).send("No file uploaded");
+      }
+      const folderId = req.body.folderId ? parseInt(req.body.folderId) : null;
+      await prisma.file.create({
+        data: {
+          name: req.file.originalname,
+          path: req.file.path,
+          size: req.file.size,
+          userId: req.user.id,
+          folderId: folderId || null,
+        },
+      });
+      res.redirect("/folders");
+    } catch (error) {
+      return next(error);
+    }
+  },
 };

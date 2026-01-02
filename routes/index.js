@@ -1,6 +1,8 @@
 const express = require("express");
 const { body } = require("express-validator");
 const { prisma } = require("../lib/prisma");
+const multer = require("multer");
+const path = require("path");
 const {
   index,
   loginPage,
@@ -10,9 +12,23 @@ const {
   logout,
   getFolders,
   postFolders,
+  getFilesForm,
+  postFiles,
 } = require("../controllers/index");
 const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/", ensureAuthenticated, index);
 router.get("/login", loginPage);
@@ -41,7 +57,14 @@ router.post(
 );
 
 router.get("/logout", logout);
-router.get("/folders", getFolders);
-router.post("/folders", postFolders);
+router.get("/folders", ensureAuthenticated, getFolders);
+router.post("/folders", ensureAuthenticated, postFolders);
+router.get("/files/upload/:id", ensureAuthenticated, getFilesForm);
+router.post(
+  "/files/upload",
+  ensureAuthenticated,
+  upload.single("file"),
+  postFiles
+);
 
 module.exports = router;

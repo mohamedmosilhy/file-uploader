@@ -7,6 +7,48 @@
   <title><%= pageTitle %></title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .btn-upload-file {
+      background: none;
+      border: none;
+      color: var(--success-color);
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      opacity: 0;
+      font-size: 14px;
+    }
+
+    .item-header:hover .btn-upload-file {
+      opacity: 1;
+    }
+
+    .btn-upload-file:hover {
+      background: #f0fdf4;
+      transform: scale(1.1);
+    }
+
+    .btn-upload-file:active {
+      transform: scale(0.95);
+    }
+
+    .item-name a {
+      color: var(--text-dark);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .item-name a:hover {
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .btn-upload-file {
+        opacity: 1;
+      }
+    }
+  </style>
   <script>
     function toggleForm(formId) {
       const form = document.getElementById(formId);
@@ -29,8 +71,11 @@
       <i class="fas fa-folder"></i>
       <span class="item-name"><%= folder.name %></span>
       <span class="item-count">(<%= totalItems %> items)</span>
-      <button class="btn-add-subfolder" onclick="toggleForm('form-<%= folder.id %>')">
+      <button class="btn-add-subfolder" onclick="toggleForm('form-<%= folder.id %>')" title="Add subfolder">
         <i class="fas fa-plus"></i>
+      </button>
+      <button onclick="window.location.href='/files/upload/<%= folder.id %>'" class="btn-upload-file" title="Upload file">
+        <i class="fas fa-upload"></i>
       </button>
     </div>
 
@@ -47,21 +92,21 @@
       </form>
     </div>
 
-    <% if (folder.childFolders?.length > 0 || folder.files?.length > 0) { %>
+    <% if ((folder.childFolders && folder.childFolders.length > 0) || (folder.files && folder.files.length > 0)) { %>
     <ul class="nested-list">
-      <% if (folder.childFolders?.length > 0) { %>
+      <% if (folder.childFolders && folder.childFolders.length > 0) { %>
       <% folder.childFolders.forEach(child => { %>
       <%- renderFolder(child, level + 1) %>
       <% }); %>
       <% } %>
-      <% if (folder.files?.length > 0) { %>
+      <% if (folder.files && folder.files.length > 0) { %>
       <% folder.files.forEach(file => { %>
       <li class="file-item">
         <div class="item-header">
           <i class="fas fa-file-alt"></i>
           <span class="item-name"><%= file.name %></span>
           <span class="file-size"><%= (file.size / 1024).toFixed(2) %> KB</span>
-          <span class="file-date"><%= file.uploadedAt.toLocaleDateString() %></span>
+          <span class="file-date"><%= new Date(file.uploadedAt).toLocaleDateString() %></span>
         </div>
       </li>
       <% }); %>
