@@ -5,43 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= pageTitle %></title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .btn-upload-file {
-      background: none;
-      border: none;
-      color: var(--success-color);
-      cursor: pointer;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      opacity: 0;
-      font-size: 14px;
-    }
-
-    .item-header:hover .btn-upload-file,
-    .item-header:hover .btn-add-subfolder {
-      opacity: 1;
-    }
-
-    .btn-upload-file:hover {
-      background: rgba(72, 187, 120, 0.1);
-      transform: scale(1.1);
-    }
-
-    .btn-upload-file:active {
-      transform: scale(0.95);
-    }
-
-    @media (max-width: 768px) {
-
-      .btn-upload-file,
-      .btn-add-subfolder {
-        opacity: 1;
-      }
-    }
-  </style>
   <script>
     function toggleForm(formId) {
       const form = document.getElementById(formId);
@@ -70,6 +36,9 @@
       <button onclick="window.location.href='/files/upload/<%= folder.id %>'" class="btn-upload-file" title="Upload file">
         <i class="fas fa-upload"></i>
       </button>
+      <a href="/folders/<%= folder.id %>/delete" class="btn-delete" title="Delete folder" onclick="return confirm('Are you sure you want to delete this folder and all its contents?')">
+        <i class="fas fa-trash"></i>
+      </a>
     </div>
 
     <div id="form-<%= folder.id %>" class="subfolder-form" style="display: none;">
@@ -144,6 +113,32 @@
   </nav>
 
   <main class="main-content">
+    <% if (success_msg && success_msg.length > 0) { %>
+    <div class="flash-message flash-success">
+      <i class="fas fa-check-circle"></i>
+      <div class="flash-content">
+        <strong>Success!</strong>
+        <p><%= success_msg %></p>
+      </div>
+      <button class="flash-close" onclick="this.parentElement.style.display='none'">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <% } %>
+
+    <% if (error_msg && error_msg.length > 0) { %>
+    <div class="flash-message flash-error">
+      <i class="fas fa-exclamation-circle"></i>
+      <div class="flash-content">
+        <strong>Error!</strong>
+        <p><%= error_msg %></p>
+      </div>
+      <button class="flash-close" onclick="this.parentElement.style.display='none'">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <% } %>
+
     <div class="content-header">
       <h1><i class="fas fa-folder-tree"></i> My Folders</h1>
       <div class="create-root-folder">

@@ -14,6 +14,7 @@ module.exports = {
   loginPost: passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
+    failureFlash: true,
   }),
   signupPage: (req, res) => {
     res.render("signup", { pageTitle: "Signup" });
@@ -34,6 +35,7 @@ module.exports = {
           password: await bcryptjs.hash(password, 10),
         },
       });
+      req.flash('success_msg', 'Account created successfully! Please login.');
       res.redirect("/login");
     } catch (error) {
       return next(error);
@@ -89,6 +91,7 @@ module.exports = {
         },
       });
 
+      req.flash('success_msg', `Folder "${folderName}" created successfully!`);
       res.redirect("/folders");
     } catch (error) {
       return next(error);
@@ -105,7 +108,8 @@ module.exports = {
   postFiles: async (req, res, next) => {
     try {
       if (!req.file) {
-        return res.status(400).send("No file uploaded");
+        req.flash('error_msg', 'No file uploaded. Please select a file.');
+        return res.redirect("/folders");
       }
       const folderId = req.body.folderId ? parseInt(req.body.folderId) : null;
       await prisma.file.create({
@@ -117,6 +121,7 @@ module.exports = {
           folderId: folderId || null,
         },
       });
+      req.flash('success_msg', `File "${req.file.originalname}" uploaded successfully!`);
       res.redirect("/folders");
     } catch (error) {
       return next(error);
@@ -127,6 +132,14 @@ module.exports = {
       const file = await prisma.file.findUnique({
         where: { id: parseInt(req.params.id) },
       });
+      if (!file) {
+        req.flash('error_msg', 'File not found.');
+        return res.redirect("/folders");
+      }
+      if (!fs.existsSync(file.path)) {
+        req.flash('error_msg', 'File not found on server.');
+        return res.redirect("/folders");
+      }
       res.download(file.path, file.name);
     } catch (error) {
       return next(error);
@@ -138,11 +151,50 @@ module.exports = {
         where: { id: parseInt(req.params.id) },
       });
 
-      fs.unlinkSync(file.path);
+      if (!file) {
+        req.flash('error_msg', 'File not found.');
+        return res.redirect("/folders");
+      }
+
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
       await prisma.file.delete({
         where: { id: parseInt(req.params.id) },
       });
 
+      req.flash('success_msg', `File "${file.name}" deleted successfully!`);
+      res.redirect("/folders");
+    } catch (error) {
+      return next(error);
+    }
+  },
+  deleteFolder: async (req, res, next) => {
+    try {
+      const folderId = parseInt(req.params.id);
+
+      const folder = await prisma.folder.findUnique({
+        where: { id: folderId },
+        include: { childFolders: true, files: true },
+      });
+
+      if (!folder) {
+        req.flash('error_msg', 'Folder not found.');
+        return res.redirect("/folders");
+      }
+
+      // Delete all files in the folder
+      if (folder.files && folder.files.length > 0) {
+        folder.files.forEach(file => {
+          if (fs.existsSync(file.path)) {
+            fs.unlinkSync(file.path);
+          }
+        });
+      }
+
+      await prisma.folder.delete({ where: { id: folderId } });
+
+      req.flash('success_msg', `Folder "${folder.name}" and all its contents deleted successfully!`);
       res.redirect("/folders");
     } catch (error) {
       return next(error);

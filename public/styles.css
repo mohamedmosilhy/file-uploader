@@ -344,12 +344,19 @@ body::before {
 }
 
 .alert-error {
-  background: #fff5f5;
-  border: 1px solid #feb2b2;
-  color: #c53030;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: var(--error-color);
 }
 
-.alert-error i {
+.alert-success {
+  background: rgba(72, 187, 120, 0.1);
+  border: 1px solid rgba(72, 187, 120, 0.3);
+  color: var(--success-color);
+}
+
+.alert-error i,
+.alert-success i {
   font-size: 20px;
   margin-top: 2px;
 }
@@ -361,6 +368,70 @@ body::before {
 
 .alert li:not(:last-child) {
   margin-bottom: 4px;
+}
+
+/* Flash Messages */
+.flash-message {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: slideDown 0.3s ease;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.flash-success {
+  background: rgba(72, 187, 120, 0.15);
+  border: 1px solid rgba(72, 187, 120, 0.4);
+  color: var(--success-color);
+}
+
+.flash-error {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  color: var(--error-color);
+}
+
+.flash-message i {
+  font-size: 24px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.flash-content {
+  flex: 1;
+}
+
+.flash-content strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.flash-content p {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 14px;
+}
+
+.flash-close {
+  background: none;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.flash-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* ===================================
@@ -566,6 +637,10 @@ body::before {
   font-size: 36px;
   color: #0a0a0a;
   box-shadow: var(--gold-glow);
+}
+
+.action-icon-upload {
+  background: linear-gradient(135deg, #48bb78, #38a169);
 }
 
 .action-card h2 {
@@ -979,6 +1054,244 @@ body::before {
 }
 
 /* ===================================
+   File Upload Page
+   =================================== */
+
+.upload-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.upload-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  box-shadow: var(--shadow-xl), var(--gold-glow);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  animation: slideUp 0.5s ease;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.upload-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.upload-header .icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--success-color), #38a169);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md), 0 0 20px rgba(72, 187, 120, 0.3);
+}
+
+.upload-header .icon i {
+  font-size: 36px;
+  color: white;
+}
+
+.upload-header h1 {
+  font-size: 28px;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.upload-header p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.file-drop-zone {
+  border: 3px dashed var(--border-color);
+  border-radius: 16px;
+  padding: 48px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: var(--bg-darker);
+  margin-bottom: 24px;
+  cursor: pointer;
+  position: relative;
+}
+
+.file-drop-zone:hover {
+  border-color: var(--primary-color);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.file-drop-zone.dragover {
+  border-color: var(--primary-color);
+  background: rgba(212, 175, 55, 0.1);
+  transform: scale(1.02);
+}
+
+.file-drop-zone i {
+  font-size: 48px;
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.file-drop-zone p {
+  color: var(--text-light);
+  margin: 8px 0;
+}
+
+.file-drop-zone .highlight {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.file-size-limit {
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.file-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-input-label {
+  background: var(--bg-card);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-input-label:hover {
+  background: var(--gold-gradient);
+  color: #0a0a0a;
+  box-shadow: var(--gold-glow);
+}
+
+.selected-file {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(72, 187, 120, 0.1);
+  border-radius: 12px;
+  display: none;
+  align-items: center;
+  border: 1px solid rgba(72, 187, 120, 0.3);
+  gap: 12px;
+}
+
+.selected-file.show {
+  display: flex;
+}
+
+.selected-file i {
+  font-size: 24px;
+  color: var(--success-color);
+}
+
+.selected-file-info {
+  flex: 1;
+}
+
+.selected-file-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.selected-file-size {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: var(--error-color);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: rgba(245, 101, 101, 0.1);
+}
+
+.upload-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-upload {
+  flex: 1;
+  background: linear-gradient(135deg, var(--success-color), #38a169);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-upload:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-upload:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-back {
+  background: var(--bg-darker);
+  border: 2px solid var(--border-color);
+  color: var(--text-dark);
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background: var(--bg-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* ===================================
    Footer
    =================================== */
 
@@ -1109,5 +1422,13 @@ body::before {
 
   .file-date {
     display: none;
+  }
+
+  .upload-card {
+    padding: 24px 20px;
+  }
+
+  .upload-actions {
+    flex-direction: column;
   }
 }

@@ -16,6 +16,7 @@ const {
   postFiles,
   downloadFile,
   deleteFile,
+  deleteFolder,
 } = require("../controllers/index");
 const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
@@ -70,4 +71,5 @@ router.post(
 );
 router.get("/files/:id/download", ensureAuthenticated, downloadFile);
 router.get("/files/:id/delete", ensureAuthenticated, deleteFile);
+router.get("/folders/:id/delete", ensureAuthenticated, deleteFolder);
 module.exports = router;
