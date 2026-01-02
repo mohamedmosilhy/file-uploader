@@ -35,7 +35,7 @@ module.exports = {
           password: await bcryptjs.hash(password, 10),
         },
       });
-      req.flash('success_msg', 'Account created successfully! Please login.');
+      req.flash("success_msg", "Account created successfully! Please login.");
       res.redirect("/login");
     } catch (error) {
       return next(error);
@@ -91,7 +91,7 @@ module.exports = {
         },
       });
 
-      req.flash('success_msg', `Folder "${folderName}" created successfully!`);
+      req.flash("success_msg", `Folder "${folderName}" created successfully!`);
       res.redirect("/folders");
     } catch (error) {
       return next(error);
@@ -108,7 +108,7 @@ module.exports = {
   postFiles: async (req, res, next) => {
     try {
       if (!req.file) {
-        req.flash('error_msg', 'No file uploaded. Please select a file.');
+        req.flash("error_msg", "No file uploaded. Please select a file.");
         return res.redirect("/folders");
       }
       const folderId = req.body.folderId ? parseInt(req.body.folderId) : null;
@@ -121,7 +121,10 @@ module.exports = {
           folderId: folderId || null,
         },
       });
-      req.flash('success_msg', `File "${req.file.originalname}" uploaded successfully!`);
+      req.flash(
+        "success_msg",
+        `File "${req.file.originalname}" uploaded successfully!`
+      );
       res.redirect("/folders");
     } catch (error) {
       return next(error);
@@ -133,11 +136,11 @@ module.exports = {
         where: { id: parseInt(req.params.id) },
       });
       if (!file) {
-        req.flash('error_msg', 'File not found.');
+        req.flash("error_msg", "File not found.");
         return res.redirect("/folders");
       }
       if (!fs.existsSync(file.path)) {
-        req.flash('error_msg', 'File not found on server.');
+        req.flash("error_msg", "File not found on server.");
         return res.redirect("/folders");
       }
       res.download(file.path, file.name);
@@ -152,7 +155,7 @@ module.exports = {
       });
 
       if (!file) {
-        req.flash('error_msg', 'File not found.');
+        req.flash("error_msg", "File not found.");
         return res.redirect("/folders");
       }
 
@@ -163,7 +166,7 @@ module.exports = {
         where: { id: parseInt(req.params.id) },
       });
 
-      req.flash('success_msg', `File "${file.name}" deleted successfully!`);
+      req.flash("success_msg", `File "${file.name}" deleted successfully!`);
       res.redirect("/folders");
     } catch (error) {
       return next(error);
@@ -179,13 +182,13 @@ module.exports = {
       });
 
       if (!folder) {
-        req.flash('error_msg', 'Folder not found.');
+        req.flash("error_msg", "Folder not found.");
         return res.redirect("/folders");
       }
 
       // Delete all files in the folder
       if (folder.files && folder.files.length > 0) {
-        folder.files.forEach(file => {
+        folder.files.forEach((file) => {
           if (fs.existsSync(file.path)) {
             fs.unlinkSync(file.path);
           }
@@ -194,7 +197,10 @@ module.exports = {
 
       await prisma.folder.delete({ where: { id: folderId } });
 
-      req.flash('success_msg', `Folder "${folder.name}" and all its contents deleted successfully!`);
+      req.flash(
+        "success_msg",
+        `Folder "${folder.name}" and all its contents deleted successfully!`
+      );
       res.redirect("/folders");
     } catch (error) {
       return next(error);
