@@ -1,5 +1,5 @@
 /* ===================================
-   Global Styles & Reset
+   CSS Variables & Reset
    =================================== */
 
 * {
@@ -9,20 +9,34 @@
 }
 
 :root {
-  --primary-color: #667eea;
-  --primary-dark: #5a67d8;
-  --secondary-color: #764ba2;
+  /* Colors */
+  --primary-color: #d4af37;
+  --primary-dark: #b8941f;
+  --secondary-color: #ffd700;
   --success-color: #48bb78;
-  --error-color: #f56565;
-  --text-dark: #2d3748;
-  --text-light: #718096;
-  --bg-light: #f7fafc;
-  --bg-white: #ffffff;
-  --border-color: #e2e8f0;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+  --error-color: #ff6b6b;
+  --text-dark: #e8e8e8;
+  --text-light: #a0a0a0;
+
+  /* Backgrounds */
+  --bg-dark: #0a0a0a;
+  --bg-darker: #151515;
+  --bg-card: #1a1a1a;
+  --bg-light: #252525;
+  --bg-white: #2a2a2a;
+  --border-color: #333333;
+
+  /* Gradients & Effects */
+  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.8);
+  --gold-glow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -30,8 +44,77 @@ body {
     "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: radial-gradient(ellipse at top, #1a1a1a 0%, #0a0a0a 100%);
   min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(212, 175, 55, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 215, 0, 0.05) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+::selection {
+  background: var(--primary-color);
+  color: #0a0a0a;
+}
+
+/* ===================================
+   Animations
+   =================================== */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* ===================================
@@ -47,40 +130,17 @@ body {
   position: relative;
 }
 
-.auth-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>')
-    no-repeat bottom;
-  background-size: cover;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 .auth-card {
-  background: var(--bg-white);
+  background: var(--bg-card);
   border-radius: 20px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-xl), var(--gold-glow);
   padding: 40px;
   width: 100%;
   max-width: 450px;
   position: relative;
   animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  z-index: 1;
 }
 
 .auth-header {
@@ -92,27 +152,13 @@ body {
   width: 80px;
   height: 80px;
   margin: 0 auto 20px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: var(--gold-gradient);
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), var(--gold-glow);
   animation: pulse 2s ease infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
 }
 
 .logo i {
@@ -130,6 +176,30 @@ body {
 .auth-header .subtitle {
   color: var(--text-light);
   font-size: 14px;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.auth-footer p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.auth-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 /* ===================================
@@ -164,14 +234,15 @@ body {
   border-radius: 12px;
   font-size: 15px;
   transition: all 0.3s ease;
-  background: var(--bg-light);
+  background: var(--bg-darker);
+  color: var(--text-dark);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  background: var(--bg-white);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: var(--bg-light);
+  box-shadow: var(--gold-glow);
 }
 
 .form-group input::placeholder {
@@ -198,13 +269,10 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
-  box-shadow: var(--shadow-md);
+  background: var(--gold-gradient);
+  color: #0a0a0a;
+  box-shadow: var(--shadow-md), var(--gold-glow);
+  font-weight: 700;
 }
 
 .btn-primary:hover {
@@ -236,6 +304,32 @@ body {
   transform: none;
 }
 
+.btn-create {
+  background: var(--gold-gradient);
+  color: #0a0a0a;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md), var(--gold-glow);
+}
+
+.btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-create:active {
+  transform: translateY(0);
+}
+
 /* ===================================
    Alerts
    =================================== */
@@ -247,17 +341,6 @@ body {
   display: flex;
   gap: 12px;
   animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .alert-error {
@@ -276,52 +359,21 @@ body {
   margin: 0;
 }
 
-.alert li {
+.alert li:not(:last-child) {
   margin-bottom: 4px;
 }
 
-.alert li:last-child {
-  margin-bottom: 0;
-}
-
 /* ===================================
-   Footer Links
-   =================================== */
-
-.auth-footer {
-  text-align: center;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border-color);
-}
-
-.auth-footer p {
-  color: var(--text-light);
-  font-size: 14px;
-}
-
-.auth-footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.auth-footer a:hover {
-  color: var(--primary-dark);
-  text-decoration: underline;
-}
-
-/* ===================================
-   Dashboard - Navbar
+   Navigation
    =================================== */
 
 .navbar {
-  background: var(--bg-white);
+  background: var(--bg-card);
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .nav-container {
@@ -344,19 +396,28 @@ body {
 
 .nav-brand i {
   font-size: 28px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
 }
 
 .nav-menu {
   display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.user-badge {
+  background: var(--gold-gradient);
+  color: #0a0a0a;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 8px;
+  box-shadow: var(--shadow-sm), var(--gold-glow);
 }
 
 .nav-link {
@@ -373,16 +434,14 @@ body {
 
 .nav-link:hover {
   background: var(--bg-light);
-  color: var(--text-dark);
+  color: var(--primary-color);
 }
 
 .nav-link.active {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
+  background: var(--gold-gradient);
+  color: #0a0a0a;
+  font-weight: 700;
+  box-shadow: var(--gold-glow);
 }
 
 .nav-link.logout {
@@ -390,11 +449,11 @@ body {
 }
 
 .nav-link.logout:hover {
-  background: #fff5f5;
+  background: rgba(255, 107, 107, 0.1);
 }
 
 /* ===================================
-   Dashboard - Content
+   Dashboard
    =================================== */
 
 .dashboard-container {
@@ -409,20 +468,11 @@ body {
   animation: fadeIn 0.6s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .welcome-section h1 {
   font-size: 36px;
-  color: var(--bg-white);
+  color: var(--text-dark);
   margin-bottom: 12px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.3);
 }
 
 .welcome-section h1 i {
@@ -431,12 +481,8 @@ body {
 
 .welcome-section p {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-light);
 }
-
-/* ===================================
-   Stats Grid
-   =================================== */
 
 .stats-grid {
   display: grid;
@@ -446,7 +492,7 @@ body {
 }
 
 .stat-card {
-  background: var(--bg-white);
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 24px;
   display: flex;
@@ -455,6 +501,7 @@ body {
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
   animation: slideUp 0.6s ease;
+  border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .stat-card:hover {
@@ -485,10 +532,6 @@ body {
   font-size: 14px;
 }
 
-/* ===================================
-   Action Cards
-   =================================== */
-
 .action-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -497,12 +540,13 @@ body {
 }
 
 .action-card {
-  background: var(--bg-white);
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 32px;
   text-align: center;
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
+  border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .action-card:hover {
@@ -514,17 +558,14 @@ body {
   width: 80px;
   height: 80px;
   margin: 0 auto 20px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: var(--gold-gradient);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 36px;
-  color: white;
+  color: #0a0a0a;
+  box-shadow: var(--gold-glow);
 }
 
 .action-card h2 {
@@ -543,18 +584,15 @@ body {
   margin-top: 16px;
 }
 
-/* ===================================
-   Info Banner
-   =================================== */
-
 .info-banner {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 24px;
   display: flex;
   gap: 20px;
   align-items: flex-start;
   box-shadow: var(--shadow-md);
+  border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .info-banner i {
@@ -577,66 +615,7 @@ body {
 }
 
 /* ===================================
-   Responsive Design
-   =================================== */
-
-@media (max-width: 768px) {
-  .auth-card {
-    padding: 30px 24px;
-  }
-
-  .welcome-section h1 {
-    font-size: 28px;
-  }
-
-  .welcome-section p {
-    font-size: 16px;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .action-section {
-    grid-template-columns: 1fr;
-  }
-
-  .nav-container {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .info-banner {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 24px 20px;
-  }
-
-  .auth-header h1 {
-    font-size: 24px;
-  }
-
-  .logo {
-    width: 64px;
-    height: 64px;
-  }
-
-  .logo i {
-    font-size: 28px;
-  }
-
-  .dashboard-container {
-    padding: 24px 16px;
-  }
-}
-
-/* ===================================
-   Main Content Area
+   Main Content & Folders
    =================================== */
 
 .main-content {
@@ -653,27 +632,23 @@ body {
 
 .content-header h1 {
   font-size: 32px;
-  color: var(--bg-white);
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.3);
 }
 
 .content-header h1 i {
   font-size: 36px;
 }
 
-/* ===================================
-   Create Folder Form
-   =================================== */
-
 .create-root-folder {
-  background: var(--bg-white);
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 12px;
-  border: 2px dashed var(--border-color);
+  border: 2px dashed rgba(212, 175, 55, 0.3);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-md);
 }
@@ -682,7 +657,7 @@ body {
   border-color: var(--primary-color);
   border-style: solid;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--gold-glow);
 }
 
 .folder-form {
@@ -700,57 +675,25 @@ body {
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.2s ease;
-  background: var(--bg-light);
+  background: var(--bg-darker);
+  color: var(--text-dark);
 }
 
 .folder-form input[type="text"]:focus {
   outline: none;
   border-color: var(--primary-color);
-  background: var(--bg-white);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: var(--bg-light);
+  box-shadow: var(--gold-glow);
 }
-
-.btn-create {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-create:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-create:active {
-  transform: translateY(0);
-}
-
-/* ===================================
-   Empty State
-   =================================== */
 
 .empty-message {
   text-align: center;
   padding: 80px 20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: var(--shadow-md);
   animation: fadeIn 0.5s ease;
+  border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .empty-message i {
@@ -767,7 +710,7 @@ body {
 }
 
 /* ===================================
-   Folder Tree Structure
+   Folder Tree
    =================================== */
 
 .folder-tree {
@@ -819,7 +762,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: var(--bg-white);
+  background: var(--bg-card);
   border-radius: 10px;
   border: 1px solid var(--border-color);
   transition: all 0.2s ease;
@@ -829,7 +772,7 @@ body {
 
 .item-header:hover {
   border-color: var(--primary-color);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), var(--gold-glow);
   transform: translateX(4px);
 }
 
@@ -857,7 +800,8 @@ body {
   white-space: nowrap;
 }
 
-.item-count {
+.item-count,
+.file-size {
   color: var(--text-light);
   font-size: 13px;
   background: var(--bg-light);
@@ -866,38 +810,39 @@ body {
   font-weight: 500;
 }
 
-.file-size,
 .file-date {
   color: var(--text-light);
   font-size: 13px;
   white-space: nowrap;
 }
 
-.file-size {
-  background: var(--bg-light);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-}
-
 /* ===================================
-   Add Subfolder Button
+   Action Buttons (Folders & Files)
    =================================== */
 
-.btn-add-subfolder {
+.btn-add-subfolder,
+.btn-upload-file {
   background: none;
   border: none;
-  color: var(--primary-color);
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 6px;
   transition: all 0.2s ease;
-  margin-left: auto;
   opacity: 0;
   font-size: 14px;
 }
 
-.item-header:hover .btn-add-subfolder {
+.btn-add-subfolder {
+  color: var(--primary-color);
+  margin-left: auto;
+}
+
+.btn-upload-file {
+  color: var(--success-color);
+}
+
+.item-header:hover .btn-add-subfolder,
+.item-header:hover .btn-upload-file {
   opacity: 1;
 }
 
@@ -906,18 +851,70 @@ body {
   transform: scale(1.1);
 }
 
-.btn-add-subfolder:active {
+.btn-upload-file:hover {
+  background: rgba(72, 187, 120, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-add-subfolder:active,
+.btn-upload-file:active {
   transform: scale(0.95);
 }
 
+.file-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.item-header:hover .file-actions {
+  opacity: 1;
+}
+
+.btn-download,
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-download {
+  color: var(--primary-color);
+}
+
+.btn-download:hover {
+  background: rgba(212, 175, 55, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.btn-delete {
+  color: var(--error-color);
+}
+
+.btn-delete:hover {
+  background: rgba(255, 107, 107, 0.1);
+  transform: scale(1.1);
+}
+
 /* ===================================
-   Inline Subfolder Form
+   Inline Forms
    =================================== */
 
 .subfolder-form {
   margin: 8px 0 8px 28px;
   padding: 12px;
-  background: var(--bg-light);
+  background: var(--bg-darker);
   border-radius: 8px;
   border: 1px solid var(--border-color);
   animation: slideDown 0.2s ease;
@@ -936,12 +933,14 @@ body {
   border-radius: 6px;
   font-size: 14px;
   transition: all 0.2s ease;
+  background: var(--bg-light);
+  color: var(--text-dark);
 }
 
 .inline-folder-form input[type="text"]:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: var(--gold-glow);
 }
 
 .btn-create-inline,
@@ -961,7 +960,7 @@ body {
 }
 
 .btn-create-inline:hover {
-  background: #f0fdf4;
+  background: rgba(72, 187, 120, 0.1);
   transform: scale(1.1);
 }
 
@@ -970,7 +969,7 @@ body {
 }
 
 .btn-cancel-inline:hover {
-  background: #fef2f2;
+  background: rgba(255, 107, 107, 0.1);
   transform: scale(1.1);
 }
 
@@ -984,11 +983,12 @@ body {
    =================================== */
 
 .footer {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card);
   padding: 24px;
   text-align: center;
   margin-top: auto;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .footer p {
@@ -998,35 +998,37 @@ body {
 }
 
 /* ===================================
-   Username Badge
-   =================================== */
-
-.nav-menu {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.user-badge {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-right: 8px;
-  box-shadow: var(--shadow-sm);
-}
-
-/* ===================================
-   Responsive Design - Folders
+   Responsive Design
    =================================== */
 
 @media (max-width: 768px) {
+  .auth-card {
+    padding: 30px 24px;
+  }
+
+  .welcome-section h1 {
+    font-size: 28px;
+  }
+
+  .welcome-section p {
+    font-size: 16px;
+  }
+
+  .stats-grid,
+  .action-section {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .info-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
   .main-content {
     padding: 24px 16px;
   }
@@ -1039,12 +1041,12 @@ body {
     flex-direction: column;
   }
 
-  .folder-form input[type="text"] {
+  .folder-form input[type="text"],
+  .btn-create {
     width: 100%;
   }
 
   .btn-create {
-    width: 100%;
     justify-content: center;
   }
 
@@ -1059,7 +1061,9 @@ body {
     font-size: 12px;
   }
 
-  .btn-add-subfolder {
+  .btn-add-subfolder,
+  .btn-upload-file,
+  .file-actions {
     opacity: 1;
   }
 
@@ -1070,6 +1074,27 @@ body {
 }
 
 @media (max-width: 480px) {
+  .auth-card {
+    padding: 24px 20px;
+  }
+
+  .auth-header h1 {
+    font-size: 24px;
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .logo i {
+    font-size: 28px;
+  }
+
+  .dashboard-container {
+    padding: 24px 16px;
+  }
+
   .content-header h1 {
     font-size: 20px;
   }
@@ -1085,61 +1110,4 @@ body {
   .file-date {
     display: none;
   }
-}
-
-/* ===================================
-   Animations & Interactions
-   =================================== */
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* ===================================
-   Smooth Scrolling
-   =================================== */
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* ===================================
-   Selection Styling
-   =================================== */
-
-::selection {
-  background: var(--primary-color);
-  color: white;
-}
-
-::-moz-selection {
-  background: var(--primary-color);
-  color: white;
 }

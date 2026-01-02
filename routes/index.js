@@ -14,6 +14,8 @@ const {
   postFolders,
   getFilesForm,
   postFiles,
+  downloadFile,
+  deleteFile,
 } = require("../controllers/index");
 const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
@@ -66,5 +68,6 @@ router.post(
   upload.single("file"),
   postFiles
 );
-
+router.get("/files/:id/download", ensureAuthenticated, downloadFile);
+router.get("/files/:id/delete", ensureAuthenticated, deleteFile);
 module.exports = router;

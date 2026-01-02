@@ -18,13 +18,14 @@
     }
 
     .upload-card {
-      background: var(--bg-white);
+      background: var(--bg-card);
       border-radius: 20px;
-      box-shadow: var(--shadow-xl);
+      box-shadow: var(--shadow-xl), var(--gold-glow);
       padding: 40px;
       width: 100%;
       max-width: 600px;
       animation: slideUp 0.5s ease;
+      border: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     .upload-header {
@@ -41,7 +42,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-md);
+      ,
+      0 0 20px rgba(72, 187, 120, 0.3) box-shadow: var(--shadow-md);
     }
 
     .upload-header .icon i {
@@ -67,7 +69,7 @@
       padding: 48px 24px;
       text-align: center;
       transition: all 0.3s ease;
-      background: var(--bg-light);
+      background: var(--bg-darker);
       margin-bottom: 24px;
       cursor: pointer;
       position: relative;
@@ -114,7 +116,7 @@
     }
 
     .file-input-label {
-      background: var(--bg-white);
+      background: var(--bg-card);
       border: 2px solid var(--primary-color);
       color: var(--primary-color);
       padding: 12px 24px;
@@ -128,8 +130,9 @@
     }
 
     .file-input-label:hover {
-      background: var(--primary-color);
-      color: white;
+      background: var(--gold-gradient);
+      color: #0a0a0a;
+      box-shadow: var(--gold-glow);
     }
 
     .selected-file {
@@ -139,6 +142,7 @@
       border-radius: 12px;
       display: none;
       align-items: center;
+      border: 1px solid rgba(72, 187, 120, 0.3);
       gap: 12px;
     }
 
@@ -215,8 +219,7 @@
     }
 
     .btn-back {
-      padding: 14px 24px;
-      background: var(--bg-light);
+      darker);
       border: 2px solid var(--border-color);
       color: var(--text-dark);
       border-radius: 12px;
@@ -230,19 +233,21 @@
     }
 
     .btn-back:hover {
-      background: var(--bg-white);
-      border-color: var(--text-dark);
-    }
-
-    @media (max-width: 640px) {
-      .upload-card {
-        padding: 32px 24px;
+      background: var(--bg-light);
+      border-color: var(--primary-color);
+      color: var(--primary-color background: var(--bg-white);
+          border-color: var(--text-dark);
       }
 
-      .upload-actions {
-        flex-direction: column;
+      @media (max-width: 640px) {
+        .upload-card {
+          padding: 32px 24px;
+        }
+
+        .upload-actions {
+          flex-direction: column;
+        }
       }
-    }
   </style>
 </head>
 

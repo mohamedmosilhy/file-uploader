@@ -2,6 +2,7 @@ const passport = require("../config/passport");
 const bcryptjs = require("bcryptjs");
 const { prisma } = require("../lib/prisma");
 const { validationResult } = require("express-validator");
+const fs = require("fs");
 
 module.exports = {
   index: (req, res) => {
@@ -116,6 +117,32 @@ module.exports = {
           folderId: folderId || null,
         },
       });
+      res.redirect("/folders");
+    } catch (error) {
+      return next(error);
+    }
+  },
+  downloadFile: async (req, res, next) => {
+    try {
+      const file = await prisma.file.findUnique({
+        where: { id: parseInt(req.params.id) },
+      });
+      res.download(file.path, file.name);
+    } catch (error) {
+      return next(error);
+    }
+  },
+  deleteFile: async (req, res, next) => {
+    try {
+      const file = await prisma.file.findUnique({
+        where: { id: parseInt(req.params.id) },
+      });
+
+      fs.unlinkSync(file.path);
+      await prisma.file.delete({
+        where: { id: parseInt(req.params.id) },
+      });
+
       res.redirect("/folders");
     } catch (error) {
       return next(error);

@@ -20,12 +20,13 @@
       font-size: 14px;
     }
 
-    .item-header:hover .btn-upload-file {
+    .item-header:hover .btn-upload-file,
+    .item-header:hover .btn-add-subfolder {
       opacity: 1;
     }
 
     .btn-upload-file:hover {
-      background: #f0fdf4;
+      background: rgba(72, 187, 120, 0.1);
       transform: scale(1.1);
     }
 
@@ -33,18 +34,10 @@
       transform: scale(0.95);
     }
 
-    .item-name a {
-      color: var(--text-dark);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .item-name a:hover {
-      color: var(--primary-color);
-    }
-
     @media (max-width: 768px) {
-      .btn-upload-file {
+
+      .btn-upload-file,
+      .btn-add-subfolder {
         opacity: 1;
       }
     }
@@ -107,6 +100,14 @@
           <span class="item-name"><%= file.name %></span>
           <span class="file-size"><%= (file.size / 1024).toFixed(2) %> KB</span>
           <span class="file-date"><%= new Date(file.uploadedAt).toLocaleDateString() %></span>
+          <div class="file-actions">
+            <a href="/files/<%= file.id %>/download" class="btn-download" title="Download file">
+              <i class="fas fa-download"></i>
+            </a>
+            <a href="/files/<%= file.id %>/delete" class="btn-delete" title="Delete file" onclick="return confirm('Are you sure you want to delete this file?')">
+              <i class="fas fa-trash"></i>
+            </a>
+          </div>
         </div>
       </li>
       <% }); %>
