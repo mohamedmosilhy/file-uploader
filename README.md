@@ -5,17 +5,20 @@ A clean and simple file management application built with Node.js, Express, and 
 ## Features
 
 ### 🔐 User Authentication
+
 - **Sign Up** - Create a new account with username and password
 - **Login/Logout** - Secure authentication using Passport.js
 - **Session Management** - Persistent sessions stored in PostgreSQL
 
 ### 📁 Folder Management
+
 - **Create Folders** - Organize files with custom folders
 - **Nested Folders** - Support for hierarchical folder structure
 - **Delete Folders** - Remove folders and all their contents
 - **Cascade Deletion** - Automatically delete child folders and files
 
 ### 📄 File Management
+
 - **Upload Files** - Upload files up to 50MB
 - **Download Files** - Download your files anytime
 - **Delete Files** - Remove unwanted files
@@ -23,6 +26,7 @@ A clean and simple file management application built with Node.js, Express, and 
 - **Cloud Storage** - Files stored securely in Supabase Storage
 
 ### 🎨 User Interface
+
 - Clean and responsive design
 - Flash messages for user feedback
 - Easy navigation between folders
@@ -40,19 +44,22 @@ A clean and simple file management application built with Node.js, Express, and 
 ## Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd file-uploader
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
-   
+
    Create a `.env` file in the root directory:
+
    ```env
    DATABASE_URL="postgresql://user:password@localhost:5432/fileuploader"
    SESSION_SECRET="your-secret-key"
@@ -62,27 +69,31 @@ A clean and simple file management application built with Node.js, Express, and 
    ```
 
 4. **Set up the database**
+
    ```bash
    npx prisma migrate dev
    ```
 
 5. **Generate Prisma Client**
+
    ```bash
    npx prisma generate
    ```
 
 6. **Start the application**
+
    ```bash
    npm start
    ```
-   
+
    Or for development with auto-restart:
+
    ```bash
    npm run dev
    ```
 
 7. **Access the application**
-   
+
    Open your browser and navigate to `http://localhost:3000`
 
 ## Database Schema
