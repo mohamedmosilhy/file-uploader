@@ -213,7 +213,6 @@ module.exports = {
 
       const folder = await prisma.folder.findUnique({
         where: { id: folderId },
-        include: { childFolders: true, files: true },
       });
 
       if (!folder) {
@@ -221,13 +220,35 @@ module.exports = {
         return res.redirect("/folders");
       }
 
-      // Delete all files in the folder
-      if (folder.files && folder.files.length > 0) {
-        folder.files.forEach(async (file) => {
-          await supabase.storage.from("uploads").remove([file.path]);
+      // Recursive function to collect all file paths from folder and nested folders
+      const collectAllFilePaths = async (fId) => {
+        const folderData = await prisma.folder.findUnique({
+          where: { id: fId },
+          include: { childFolders: true, files: true },
         });
+
+        if (!folderData) return [];
+
+        let allFilePaths = folderData.files.map((file) => file.path);
+
+        // Recursively collect files from child folders
+        for (const childFolder of folderData.childFolders) {
+          const childFilePaths = await collectAllFilePaths(childFolder.id);
+          allFilePaths = allFilePaths.concat(childFilePaths);
+        }
+
+        return allFilePaths;
+      };
+
+      // Collect all file paths from this folder and all nested folders
+      const allFilePaths = await collectAllFilePaths(folderId);
+
+      // Delete all files from Supabase storage
+      if (allFilePaths.length > 0) {
+        await supabase.storage.from("uploads").remove(allFilePaths);
       }
 
+      // Delete the folder (cascade delete will handle child folders and files in DB)
       await prisma.folder.delete({ where: { id: folderId } });
 
       req.flash(
