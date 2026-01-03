@@ -26,18 +26,23 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 // Session configuration
+app.set("trust proxy", 1);
+
 app.use(
   session({
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
-    },
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: true,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+    },
     store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000, // ms
+      checkPeriod: 2 * 60 * 1000,
       dbRecordIdIsSessionId: true,
-      dbRecordIdFunction: undefined,
     }),
   })
 );
