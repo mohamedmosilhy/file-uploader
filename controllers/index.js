@@ -1,7 +1,14 @@
+require("dotenv").config();
 const passport = require("../config/passport");
 const bcryptjs = require("bcryptjs");
 const { prisma } = require("../lib/prisma");
 const { validationResult } = require("express-validator");
+const { createClient } = require("@supabase/supabase-js");
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
 const fs = require("fs");
 
 module.exports = {
@@ -105,45 +112,74 @@ module.exports = {
       return next(error);
     }
   },
+
   postFiles: async (req, res, next) => {
     try {
-      if (!req.file) {
+      const file = req.file;
+      if (!file) {
         req.flash("error_msg", "No file uploaded. Please select a file.");
         return res.redirect("/folders");
       }
       const folderId = req.body.folderId ? parseInt(req.body.folderId) : null;
+
+      const filePath = `${req.user.id}/${Date.now()}_${file.originalname}`;
+
+      const { error } = await supabase.storage
+        .from("uploads")
+        .upload(filePath, file.buffer, {
+          contentType: file.mimetype,
+        });
+
+      if (error) throw error;
+
       await prisma.file.create({
         data: {
-          name: req.file.originalname,
-          path: req.file.path,
-          size: req.file.size,
+          name: file.originalname,
+          path: filePath,
+          size: file.size,
           userId: req.user.id,
           folderId: folderId || null,
         },
       });
       req.flash(
         "success_msg",
-        `File "${req.file.originalname}" uploaded successfully!`
+        `File "${file.originalname}" uploaded successfully!`
       );
       res.redirect("/folders");
     } catch (error) {
       return next(error);
     }
   },
+
   downloadFile: async (req, res, next) => {
     try {
       const file = await prisma.file.findUnique({
         where: { id: parseInt(req.params.id) },
       });
-      if (!file) {
+      if (!file || file.userId !== req.user.id) {
         req.flash("error_msg", "File not found.");
         return res.redirect("/folders");
       }
-      if (!fs.existsSync(file.path)) {
+
+      const { data, error } = await supabase.storage
+        .from("uploads")
+        .download(file.path);
+
+      if (error) {
         req.flash("error_msg", "File not found on server.");
         return res.redirect("/folders");
       }
-      res.download(file.path, file.name);
+
+      // Convert Blob to Buffer
+      const buffer = Buffer.from(await data.arrayBuffer());
+
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${file.name}"`
+      );
+      res.setHeader("Content-Type", data.type || "application/octet-stream");
+      res.setHeader("Content-Length", buffer.length);
+      res.send(buffer);
     } catch (error) {
       return next(error);
     }
@@ -154,14 +190,13 @@ module.exports = {
         where: { id: parseInt(req.params.id) },
       });
 
-      if (!file) {
+      if (!file || file.userId !== req.user.id) {
         req.flash("error_msg", "File not found.");
         return res.redirect("/folders");
       }
 
-      if (fs.existsSync(file.path)) {
-        fs.unlinkSync(file.path);
-      }
+      await supabase.storage.from("uploads").remove([file.path]);
+
       await prisma.file.delete({
         where: { id: parseInt(req.params.id) },
       });
@@ -188,10 +223,8 @@ module.exports = {
 
       // Delete all files in the folder
       if (folder.files && folder.files.length > 0) {
-        folder.files.forEach((file) => {
-          if (fs.existsSync(file.path)) {
-            fs.unlinkSync(file.path);
-          }
+        folder.files.forEach(async (file) => {
+          await supabase.storage.from("uploads").remove([file.path]);
         });
       }
 

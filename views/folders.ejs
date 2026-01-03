@@ -36,9 +36,11 @@
       <button onclick="window.location.href='/files/upload/<%= folder.id %>'" class="btn-upload-file" title="Upload file">
         <i class="fas fa-upload"></i>
       </button>
-      <a href="/folders/<%= folder.id %>/delete" class="btn-delete" title="Delete folder" onclick="return confirm('Are you sure you want to delete this folder and all its contents?')">
-        <i class="fas fa-trash"></i>
-      </a>
+      <button class="btn-upload-file">
+        <a href="/folders/<%= folder.id %>/delete" class="btn-delete-folder" title="Delete folder" onclick="return confirm('Are you sure you want to delete this folder and all its contents?')">
+          <i class="fas fa-trash"></i>
+        </a>
+      </button>
     </div>
 
     <div id="form-<%= folder.id %>" class="subfolder-form" style="display: none;">

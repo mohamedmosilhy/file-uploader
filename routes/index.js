@@ -1,8 +1,6 @@
 const express = require("express");
 const { body } = require("express-validator");
 const { prisma } = require("../lib/prisma");
-const multer = require("multer");
-const path = require("path");
 const {
   index,
   loginPage,
@@ -21,17 +19,14 @@ const {
 const { ensureAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
+const multer = require("multer");
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 50 * 1024 * 1024,
   },
 });
-
-const upload = multer({ storage: storage });
 
 router.get("/", ensureAuthenticated, index);
 router.get("/login", loginPage);

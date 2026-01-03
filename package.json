@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
     "seed": "node prisma/seed.js"
   },
   "prisma": {
@@ -20,6 +19,7 @@
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@quixo3/prisma-session-store": "^3.1.19",
+    "@supabase/supabase-js": "^2.89.0",
     "bcryptjs": "^3.0.3",
     "connect-flash": "^0.1.1",
     "connect-pg-simple": "^10.0.0",
